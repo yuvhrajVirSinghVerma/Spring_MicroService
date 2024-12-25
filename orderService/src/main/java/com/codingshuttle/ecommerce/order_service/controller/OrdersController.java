@@ -18,6 +18,10 @@ public class OrdersController {
 
     private final OrdersService orderService;
 
+    @GetMapping(path = "/ServiceDiscoveryTest")
+    public String TestServiceDiscovery(){
+        return "Hello form Orders Service";
+    }
 
     @GetMapping
     public ResponseEntity<List<OrderRequestDto>> getAllOrders(HttpServletRequest httpServletRequest) {
