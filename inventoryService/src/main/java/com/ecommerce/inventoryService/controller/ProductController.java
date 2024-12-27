@@ -22,12 +22,14 @@ public class ProductController {
     private final RestClient restClient;
     private final DiscoveryClient discoveryClient;
 
+
     @GetMapping(path = "/DiscoverOrders")
     public String DiscoverOrders(){
+        System.out.println("discoveryClient.getInstances "+discoveryClient.getInstances("ORDER-SERVICE") );
        ServiceInstance instance=discoveryClient.getInstances("ORDER-SERVICE").getFirst();
 
         System.out.println("instance.getUri() "+instance.getUri());
-       String response=restClient.get().uri(instance.getUri()+"/api/v1/orders/ServiceDiscoveryTest").
+       String response=restClient.get().uri(instance.getUri()+"/orders/core/ServiceDiscoveryTest").
                retrieve().
                body(String.class);
        return response;
