@@ -1,9 +1,14 @@
 package com.ecommerce.inventoryService.controller;
 
+import com.ecommerce.inventoryService.Clients.FeignClientInt;
 import com.ecommerce.inventoryService.dto.ProductDto;
 import com.ecommerce.inventoryService.service.ProductService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
@@ -22,18 +27,30 @@ public class ProductController {
     private final RestClient restClient;
     private final DiscoveryClient discoveryClient;
 
+    @Autowired
+    private FeignClientInt feignClientInt;
 
     @GetMapping(path = "/DiscoverOrders")
+//    @Retry(name="InventoryRetry",fallbackMethod = "HandleRetry")
+//    @RateLimiter(name="InventoryRateLimiter",fallbackMethod = "HandleRetry")
+    @CircuitBreaker(name = "inventoryCircuitBreaker", fallbackMethod = "HandleRetry")
     public String DiscoverOrders(){
-        System.out.println("discoveryClient.getInstances "+discoveryClient.getInstances("ORDER-SERVICE") );
-       ServiceInstance instance=discoveryClient.getInstances("ORDER-SERVICE").getFirst();
+        System.out.println("called");
+//        System.out.println("discoveryClient.getInstances "+discoveryClient.getInstances("ORDER-SERVICE") );
+//       ServiceInstance instance=discoveryClient.getInstances("ORDER-SERVICE").getFirst();
+//
+//        System.out.println("instance.getUri() "+instance.getUri());
+//       String response=restClient.get().uri(instance.getUri()+"/orders/core/ServiceDiscoveryTest").
+//               retrieve().
+//               body(String.class);
+//       return response;
+        return feignClientInt.TestDiscovery();
 
-        System.out.println("instance.getUri() "+instance.getUri());
-       String response=restClient.get().uri(instance.getUri()+"/orders/core/ServiceDiscoveryTest").
-               retrieve().
-               body(String.class);
-       return response;
+    }
 
+    public String HandleRetry(Throwable throwable){
+        System.out.println("Retry Failed due to "+throwable.getMessage());
+        return "Retry Failed";
     }
 
     @GetMapping
