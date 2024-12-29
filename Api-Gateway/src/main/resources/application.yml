@@ -1,3 +1,5 @@
+jwt.secretKey : abcdefghijklmnopqrtsuvwxyz123456789011121314
+
 spring:
   application:
     name: api-gateway
@@ -12,7 +14,9 @@ spring:
             - Path=/api/v1/orders/**
           filters:
             - StripPrefix=2
-        #            - RedirectTo=302, http://codingshuttle.com
+            - name: OrderRoueFilter
+              args:
+                isfeatureEnabled: true
         - id: inventory-service
           uri: lb://INVENTORY-SERVICE
           predicates:
