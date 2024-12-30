@@ -23,21 +23,21 @@ public class OrderRoueFilter extends AbstractGatewayFilterFactory<OrderRoueFilte
            System.out.println("config++++ "+config.toString() +" : "+config.isfeatureEnabled);
            System.out.println("order route specific filter");
            String Authheader=exchange.getRequest().getHeaders().getFirst("Authorization");
-           if(Authheader==null){
-               exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-               return exchange.getResponse().setComplete();
-           }
-
-           String token=Authheader.split("Bearer")[1];
-
-           Long id=jwtService.getUserId(token);
-
-           //we can create an auth service for validation token using spring security and then pass the valid token to other microservices
-           exchange
-                   .getRequest()
-                   .mutate()
-                   .header("X-User-Id",id.toString())
-                   .build();
+//           if(Authheader==null){
+//               exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+//               return exchange.getResponse().setComplete();
+//           }
+//
+//           String token=Authheader.split("Bearer")[1];
+//
+//           Long id=jwtService.getUserId(token);
+//
+//           //we can create an auth service for validation token using spring security and then pass the valid token to other microservices
+//           exchange
+//                   .getRequest()
+//                   .mutate()
+//                   .header("X-User-Id",id.toString())
+//                   .build();
            return chain.filter(exchange);
         };
     }

@@ -16,6 +16,7 @@ INSERT INTO orders (total_price,order_status) VALUES
  (4,107,3),
  (4,108,1),
  (5,109,2),
- (6,110,3);
+ (6,110,3),
+ (6,111,4);
 
 
