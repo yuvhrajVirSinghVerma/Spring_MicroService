@@ -1,0 +1,15 @@
+spring.application.name: ConfigServer
+
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri:
+          username: yuvhrajVirSinghVerma
+          password:
+          default-label: main
+
+server:
+  port: 8888
